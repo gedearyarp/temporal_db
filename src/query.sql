@@ -101,3 +101,5 @@ select temporal_coalesce('project', 'name', 'Project Hotel')
 
 select * from project order by id;
 select * from teams order by id;
+
+select * from temporal_coalesce('project', 'name', 'start_date', 'end_date');
