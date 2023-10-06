@@ -12,3 +12,6 @@ CREATE TYPE public.join_result AS (
 	start_date date,
 	end_date date
 );
+
+CREATE TYPE PUBLIC.PROJECTION_RESULT AS
+	( TEAM_NAME CHARACTER VARYING(255), START_DATE DATE, END_DATE DATE );

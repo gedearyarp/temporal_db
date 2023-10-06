@@ -105,3 +105,6 @@ select * from teams order by id;
 select * from temporal_join('teams', 'project');
 select * from temporal_different('teams', 'project');
 select * from temporal_coalesce('project', 'name', 'start_date', 'end_date');
+
+SELECT * FROM temporal_projection('teams', 'name', 'start_period', 'end_period');
+SELECT * FROM temporal_selection('teams', 'name', 'Team One');
