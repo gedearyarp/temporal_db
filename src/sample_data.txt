@@ -1,0 +1,18 @@
+PROJECT
+ID	Name			Start Date		End Date
+1	Project Alpha		2023-01-15		2023-04-30
+2	Project Beta		2023-01-10		2023-05-01
+3	Project Gamma	2023-03-05		2023-05-01
+4	Project Delta		2023-05-20		2023-07-25
+5	Project Epsilon	2023-05-20		2023-07-25
+6	Project Charlie	2023-07-25		2023-08-25
+8	Project Hotel		2023-08-12		2023-10-02
+7	Project Golf		2023-08-12		2023-09-02
+15	Project Foxy		2022-01-01		2023-12-11
+
+TEAMS
+ID	Name			Start Period		End Period
+2	Team Two		2023-02-15		2023-07-31
+3	Team Three		2023-03-10		2023-08-31
+4	Team Four		2023-04-05		2023-09-30
+5	Team Five		2023-05-20		2023-10-31

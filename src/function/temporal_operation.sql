@@ -112,3 +112,74 @@ BEGIN
     WHERE tp.team_name = _name;
 END;
 $$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION temporal_union()
+RETURNS TABLE(name VARCHAR(255), start_date DATE, end_date DATE) AS
+$$
+DECLARE
+    project_row RECORD;
+    team_row RECORD;
+    overlapping BOOLEAN;
+BEGIN
+    -- Loop through project table
+    FOR project_row IN (SELECT * FROM project)
+    LOOP
+        overlapping := FALSE; -- Flag to track overlapping rows
+        
+        -- Check if the project row overlaps with any team row
+        FOR team_row IN (SELECT * FROM teams t WHERE t.name = project_row.name)
+        LOOP
+            IF overlaps(project_row.start_date, project_row.end_date, team_row.start_period, team_row.end_period) THEN
+                -- If overlap is found, merge dates and set the flag
+                overlapping := TRUE;
+				name := project_row.name;
+                start_date := LEAST(project_row.start_date, team_row.start_period);
+                end_date := GREATEST(project_row.end_date, team_row.end_period);
+				RETURN NEXT;
+                EXIT; -- Exit the inner loop
+			ELSE
+				name := team_row.name;
+				start_date := team_row.start_period;
+				end_date := team_row.end_period;
+				RETURN NEXT;
+            END IF;
+        END LOOP;
+
+        -- If no overlap is found, return the project row as is
+        IF NOT overlapping THEN
+            name := project_row.name;
+            start_date := project_row.start_date;
+            end_date := project_row.end_date;
+            RETURN NEXT;
+        END IF;
+    END LOOP;
+
+    -- Loop through team table
+    FOR team_row IN (SELECT * FROM teams t WHERE t.name NOT IN (SELECT p.name FROM project p))
+    LOOP
+        name := team_row.name;
+        start_date := team_row.start_period;
+        end_date := team_row.end_period;
+        RETURN NEXT;
+    END LOOP;
+
+    RETURN;
+END;
+$$ LANGUAGE plpgsql;
+
+
+​​CREATE OR REPLACE FUNCTION temporal_timeslice(table_name VARCHAR(255), col_start VARCHAR(255), col_end VARCHAR(255), time_input DATE)
+RETURNS TABLE(id INTEGER, name VARCHAR(255), start_date DATE, end_date DATE) AS
+$$
+DECLARE
+    sql_query TEXT;
+BEGIN
+    sql_query := 'SELECT * FROM ' || table_name || 
+                 ' WHERE ' || col_start || ' <= $1 AND ' || col_end || '>= $1';
+
+    RETURN QUERY EXECUTE sql_query USING time_input;
+END;
+$$ LANGUAGE plpgsql;
+
+;
+

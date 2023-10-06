@@ -93,18 +93,18 @@ call insert_project('Project Foxy', '2022-01-01', '2022-10-10');
 call insert_project('Project Foxy', '2022-10-09', '2022-11-11');
 call insert_project('Project Foxy', '2022-12-12', '2022-12-31');
 
-call update_project(11, '2022-12-25', '2022-12-31');
+call update_project(16, '2022-12-25', '2022-12-31');
 
-call delete_project(11);
-
-select temporal_coalesce('project', 'name', 'Project Hotel')
+call delete_project(16);
 
 select * from project order by id;
-select * from teams order by id;
+select * from teams order by user_id;
 
 select * from temporal_join('teams', 'project');
 select * from temporal_different('teams', 'project');
 select * from temporal_coalesce('project', 'name', 'start_date', 'end_date');
 
 SELECT * FROM temporal_projection('teams', 'name', 'start_period', 'end_period');
-SELECT * FROM temporal_selection('teams', 'name', 'Team One');
+SELECT * FROM temporal_selection('teams', 'name', 'Team Two');
+SELECT * FROM temporal_union()
+SELECT * FROM temporal_timeslice('teams', 'start_period', 'end_period', '2023-10-06');
